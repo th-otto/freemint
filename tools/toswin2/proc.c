@@ -5,7 +5,6 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <pwd.h>
-#include <macros.h>
 #include <signal.h>
 #include <string.h>
 #include <support.h>
@@ -26,6 +25,8 @@
 #include "textwin.h"
 #include "toswin2.h"
 #include "window.h"
+
+#include <macros.h>
 
 
 /* static long 	lasthz; */
