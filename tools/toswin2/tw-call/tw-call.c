@@ -30,10 +30,8 @@
 #include <string.h>
 
 #include <basepage.h>
-#include <osbind.h>
+#include <mintbind.h>
 #include <sys/ioctl.h>
-
-#include <cflib.h>
 
 #include "../global.h"
 #include "../share.h"
@@ -68,7 +66,7 @@ static void send_msg(int what)
 }
 
 
-bool write_blk(int argc, char *argv[])
+static bool write_blk(int argc, char *argv[])
 {
 	int			fd, i;
 	SHAREDATA	*blk;
@@ -132,7 +130,7 @@ bool write_blk(int argc, char *argv[])
 }
 
 
-int find_tw(void)
+static int find_tw(void)
 {
 	int	id;
 	char	progname[256], str[256], *p = NULL;
@@ -172,10 +170,10 @@ int find_tw(void)
 
 int main(int argc, char *argv[])
 {
-	short	exit_code = 0, smsg[8];
-	int	msg[8];
-	char	str[256];
-	long	l;
+	short ret = 0, smsg[8];
+	short msg[8];
+	char str[256];
+	long l;
 
 	dbg = (getenv("DEBUG") != NULL);
 
@@ -227,7 +225,7 @@ int main(int argc, char *argv[])
 							send_msg(TWWRITE);
 						else
 						{
-							exit_code = -1;
+							ret = -1;
 							quit = TRUE;
 						}
 						break;
@@ -237,7 +235,7 @@ int main(int argc, char *argv[])
 
 					case TWERR:
 						form_alert(1, "[3][TW-Call:|TosWin2 meldet Fehler!][Abbruch]");
-						exit_code = -1;
+						ret = -1;
 						quit = TRUE;
 						break;
 
@@ -248,12 +246,12 @@ int main(int argc, char *argv[])
 						 */
 						if (msg[3] == gl_apid)
 						{
-							exit_code = msg[4];
+							ret = msg[4];
 							quit = TRUE;
 						}
 						else if (msg[3] == tw_id)		/* TosWin2 wurde beendet */
 						{
-							exit_code = 0;
+							ret = 0;
 							quit = TRUE;
 						}
 						break;
@@ -286,10 +284,10 @@ int main(int argc, char *argv[])
 		form_alert(1, "[3][TW-Call:|TosWin2 l„uft nicht!][Abbruch]");
 
 	if (dbg)
-		printf("tw-call: leaving tw-call(%d) with exit_code = %d.\n", gl_apid, exit_code);
+		printf("tw-call: leaving tw-call(%d) with exit_code = %d.\n", gl_apid, (int) ret);
 
 	appl_exit();
-	exit(exit_code);
+	exit(ret);
 
 	/* never reached */
 	return 0;

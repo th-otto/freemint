@@ -1,7 +1,7 @@
 
 #undef DEBUG_AV
 
-#include <cflib.h>
+#include <osbind.h>
 
 #include "global.h"
 #include "av.h"
@@ -11,10 +11,10 @@
 #include "toswin2.h"
 
 
-int				av_shell_id = -1;				/* ID des Desktops */
-unsigned short	av_shell_status = 0;			/* Welche AV_* kann Desktop */
+int		av_shell_id = -1;		/* ID des Desktops */
+unsigned short	av_shell_status = 0;		/* Welche AV_* kann Desktop */
 
-static char		*global_str = NULL;
+static char	*global_str = NULL;
 static short	msgbuff[8];
 
 static bool send_msg(void)
@@ -23,7 +23,7 @@ static bool send_msg(void)
 
 	msgbuff[1] = gl_apid;
 	msgbuff[2] = 0;
-	ret = appl_write(av_shell_id, (int) sizeof(msgbuff), msgbuff);
+	ret = appl_write(av_shell_id, sizeof(msgbuff), msgbuff);
 	return (ret > 0);
 }
 
@@ -62,7 +62,7 @@ static void send_avexit(void)
 {
 	if ((av_shell_id >= 0) && (av_shell_status & 1024))
 	{
-		memset(msgbuff, 0, (int)sizeof(msgbuff));
+		memset(msgbuff, 0, sizeof(msgbuff));
 		msgbuff[0] = AV_EXIT;
 		msgbuff[3] = gl_apid;
 #ifdef DEBUG_AV
@@ -72,13 +72,13 @@ debug("AV_EXIT\n");
 	}
 }
 
-bool send_avkey(int ks, int kr)
+bool send_avkey(short ks, short kr)
 {
 	bool	b = FALSE;
 
 	if ((av_shell_id >= 0) && (av_shell_status & 1))
 	{
-		memset(msgbuff, 0, (int)sizeof(msgbuff));
+		memset(msgbuff, 0, sizeof(msgbuff));
 		msgbuff[0] = AV_SENDKEY;
 		msgbuff[1] = gl_apid;
 		msgbuff[3] = ks;
@@ -91,7 +91,7 @@ debug("AV_SENDKEY (%d,%d)\n", ks, kr);
 	return b;
 }
 
-void send_avwinopen(int handle)
+void send_avwinopen(short handle)
 {
 	if ((av_shell_id >= 0) && gl_avcycle)
 	{
@@ -105,7 +105,7 @@ debug("AV_ACCWINDOPEN (%d)\n", handle);
 	}
 }
 
-void send_avwinclose(int handle)
+void send_avwinclose(short handle)
 {
 	if ((av_shell_id >= 0) && gl_avcycle)
 	{
@@ -119,14 +119,14 @@ debug("AV_ACCWINDCLOSED (%d)\n", handle);
 	}
 }
 
-void handle_av(int msgbuff[])
+void handle_av(short *msg)
 {
-	char	*p;
+	char *p;
 	
-	switch (msgbuff[0])
+	switch (msg[0])
 	{
 		case VA_START :
-			p = (char *)ts2ol(msgbuff[3], msgbuff[4]);
+			p = (char *)ts2ol(msg[3], msg[4]);
 			if (p != NULL)
 			{
 #ifdef DEBUG_AV
@@ -135,36 +135,36 @@ debug("VA_START %s\n", p);
 				if (strcmp(p, "-l") == 0)
 					new_shell();
 			}
-			send_avstarted(msgbuff[1], msgbuff[3], msgbuff[4]);
+			send_avstarted(msg[1], msg[3], msg[4]);
 			break;
 
 		case VA_PROTOSTATUS :
 #ifdef DEBUG_AV
 {
 	unsigned short m;
-	m = (unsigned short)msgbuff[3];
+	m = (unsigned short)msg[3];
 debug("VA_PROTSTATUS %u\n", m);
 }
 #endif
-			av_shell_status = msgbuff[3];
+			av_shell_status = msg[3];
 			if (gl_avcycle && !(av_shell_status & 64))
 				gl_avcycle = FALSE;			/* glob. Fensterwechsel abschalten */
 			break;
 
 		case VA_DRAGACCWIND :				/* bei D&D mit glob. Fensterwechsel */
-			p = (char *)ts2ol(msgbuff[6], msgbuff[7]);
+			p = (char *)ts2ol(msg[6], msg[7]);
 			if (p != NULL)
 			{
 #ifdef DEBUG_AV
 debug("VA_DRAGACCWIND %s\n", p);
 #endif
-				handle_avdd(msgbuff[3], p);
+				handle_avdd(msg[3], p);
 			}
 			break;
 
 		default:
 #ifdef DEBUG_AV
-debug("Unbekannte AV-Meldung: %d, %X\n", msgbuff[0], msgbuff[0]);
+debug("Unbekannte AV-Meldung: %d, %X\n", msg[0], msg[0]);
 #endif
 			break;
 	}
@@ -213,7 +213,7 @@ bool av_init(void)
 	{
 		strncpy(name, p, 8);
 		name[8] = '\0';
-		for (i = (int)strlen(name); i < 8; i++)
+		for (i = strlen(name); i < 8; i++)
 			strcat(name, " ");
 		i = appl_find(name);
 		if (i >= 0)

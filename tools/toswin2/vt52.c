@@ -2,7 +2,7 @@
  * VT52 emulator for a GEM text window (with type TEXTWIN)
  */
 
-#include <cflib.h>
+#include <osbind.h>
 
 #include "global.h"
 #include "console.h"
