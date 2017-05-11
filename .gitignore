@@ -1,5 +1,6 @@
 .deps
 .compile_*
+.cpu_*
 shared/libsyscall/pars.c
 shared/libsyscall/pars.h
 shared/libsyscall/scan.c
@@ -60,6 +61,11 @@ tools/net-tools/tests/tcpsv
 tools/net-tools/tests/udpclnt
 tools/net-tools/tests/udpserv
 tools/nfs/mount_nfs
+tools/strace/genstamp
+tools/strace/gentables
+tools/strace/strace
+tools/strace/sysenttab.c
+tools/strace/sysenttab.h
 tools/sysctl/sysctl
 *.o
 *.a
