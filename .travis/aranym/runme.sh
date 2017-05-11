@@ -1,1 +1,0 @@
-aranym-mmu -c config

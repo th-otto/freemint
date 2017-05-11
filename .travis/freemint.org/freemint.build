@@ -15,9 +15,9 @@ cd freemint
 # else
 	rm -rf /tmp/freemint/
 	DEST=/tmp/freemint MINTVER=1-19-$SHORT_ID ./.travis/freemint.org/freemint.copy
-	tar -C /tmp/freemint/ -cjf /tmp/trunk-$TODAY.tar.bz2 .
+	tar -C /tmp/freemint/ -cjf /tmp/helmut-$TODAY.tar.bz2 .
 	# Now upload
-	cp /tmp/trunk-$TODAY.tar.bz2 "$1"
+	cp /tmp/helmut-$TODAY.tar.bz2 "$1"
 # fi
 #
 # ./freemint.dousb
