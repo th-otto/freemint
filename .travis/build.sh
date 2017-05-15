@@ -1,14 +1,18 @@
 #!/bin/sh
 
+# Use as ". build.sh"
+
 TMP="$1"
 OUT="$2"
 
-sed -e "s/\"cur\"/\"${SHORT_ID}\"/;" sys/buildinfo/version.h > sys/buildinfo/version.h.tmp && mv sys/buildinfo/version.h.tmp sys/buildinfo/version.h
-cd ..
+if [ -z "$OLD_BUILD" -o "$OLD_BUILD" -eq 0 ]
+then
+	export PUBLISH_PATH="${PUBLISH_PATH}/new"
 
-cd "${PROJECT}" && make && cd ..
+	# TODO: when all the tools (mintloader etc) are added to Helmut's branch
+else
+	export PUBLISH_PATH="${PUBLISH_PATH}/old"
 
-mkdir -p "${TMP}"
-mkdir -p "${OUT}"
-
-"./${PROJECT}/.travis/freemint.org/freemint.build" "${OUT}"
+	mkdir -p "${OUT}"
+	"./.travis/freemint.org/freemint.build" "${OUT}"
+fi
