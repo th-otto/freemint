@@ -2043,7 +2043,7 @@ extern USB_PUN_INFO pun_usb;                                //xhdi.c
 #define bufl0	(*(BCB **)0x4b2L)
 #define bufl1	(*(BCB **)0x4b6L)
 
-#define BCB	struct _bcb
+#define BCB	struct _mybcb
 BCB
 {
 	BCB		*b_link;	/* next bcb (API)          */
