@@ -403,7 +403,7 @@ struct kentry_fs
 	 * If the file sharing mode of f conflicts with any of the FILEPTRs
 	 * in the list, then this returns 1, otherwise 0.
 	 *
-	 * denylock(list, newlock)
+	 * denylock(pid, list, newlock)
 	 *
 	 * checks a list of locks to see if the new lock conflicts with any
 	 * one in the list. If so, the first conflicting lock is returned;
