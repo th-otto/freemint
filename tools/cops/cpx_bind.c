@@ -228,6 +228,14 @@ a_call_return:
 static jmp_buf alpha_context;
 static long kernel_stack;
 
+#ifdef _BITS_SETJMP_H
+#define JB_PC [0].__jmpbuf[0].ret_pc
+#define JB_SP [0].__jmpbuf[0].regs[11]
+#else
+#define JB_PC [0]
+#define JB_SP [12]
+#endif
+
 void
 a_call_main(void)
 {
@@ -242,11 +250,11 @@ a_call_main(void)
 	}
 
 	/* remember current stack */
-	kernel_stack = alpha_context[12];
+	kernel_stack = alpha_context JB_SP;
 	DEBUG(("a_call_main: kernel_stack 0x%lx\n", kernel_stack));
 
-	jb[0] = (long)cpx_main_loop;
-	jb[12] = kernel_stack;
+	jb JB_PC = (long)cpx_main_loop;
+	jb JB_SP = kernel_stack;
 
 	longjmp(jb, 1);
 
@@ -344,8 +352,8 @@ Xform_do(const long *sp)
 		 * switch stack and call out form_do
 		 */
 
-		jb[0] = (long)call_cpx_form_do;
-		jb[12] = kernel_stack;
+		jb JB_PC = (long)call_cpx_form_do;
+		jb JB_SP = kernel_stack;
 
 		longjmp(jb, 1);
 
@@ -404,8 +412,8 @@ new_context_done(void)
 	free(call_open_cpx_context_desc->stack);
 	call_open_cpx_context_desc->stack = NULL;
 
-	jb[0] = (long)cpx_main_loop;
-	jb[12] = kernel_stack;
+	jb JB_PC = (long)cpx_main_loop;
+	jb JB_SP = kernel_stack;
 
 	longjmp(jb, 1);
 }
@@ -419,8 +427,8 @@ call_open_cpx_context(void)
 
 	DEBUG(("call_open_cpx_context(%s) -> go back\n", call_open_cpx_context_desc->file_name));
 
-	jb[0] = (long)new_context_done;
-	jb[12] = kernel_stack;
+	jb JB_PC = (long)new_context_done;
+	jb JB_SP = kernel_stack;
 
 	longjmp(jb, 1);
 }
@@ -439,8 +447,8 @@ new_context(CPX_DESC *cpx_desc)
 
 		call_open_cpx_context_desc = cpx_desc;
 
-		jb[0] = (long)call_open_cpx_context;
-		jb[12] = (long)cpx_desc->stack + 16380;
+		jb JB_PC = (long)call_open_cpx_context;
+		jb JB_SP = (long)cpx_desc->stack + 16380;
 
 		longjmp(jb, 1);
 
