@@ -1651,8 +1651,8 @@ failed:
 
 		if (coldfire_purec_patcher == NULL)
 		{
-			ulong pexe = NULL;
-			if (get_toscookie(0x50455845L, &pexe) == 0 && pexe != NULL)
+			ulong pexe = 0;
+			if (get_toscookie(0x50455845L, &pexe) == 0 && pexe != 0)
 				coldfire_purec_patcher = (void (*)(BASEPAGE*))pexe;  // Patcher exported from FireTOS.
 			else
 				coldfire_purec_patcher = patch_memset_purec; // Fallback to internal MiNT patcher.
