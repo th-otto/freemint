@@ -52,6 +52,8 @@
 #endif
 
 /* XXX add to mintlib somewhere under include/mint */
+#ifndef __XATTR
+#define __XATTR
 struct xattr
 {
 	unsigned short mode;
@@ -71,5 +73,7 @@ struct xattr
 	short res1;		/* reserved for future kernel use */
 	long res2[2];
 };
+
+#endif
 
 # endif /* _global_h */

@@ -44,8 +44,13 @@
 #endif
 
 
+#ifndef _DOSVARS
+#define _DOSVARS
 typedef	void *DOSVARS;
+#endif
 
+#ifndef _AESVARS
+#define _AESVARS
 typedef struct
 {
 	long	magic;				/* must be 0x87654321 */
@@ -66,7 +71,10 @@ typedef struct
 	int	release;			/* Release-Status */
 
 } AESVARS;
+#endif
 
+#ifndef _MAGX_COOKIE
+#define _MAGX_COOKIE
 typedef struct
 {
 	long	config_status;
@@ -74,6 +82,7 @@ typedef struct
 	AESVARS	*aesvars;
 
 } MAGX_COOKIE;
+#endif
 
 
 static USERBLK *substitute_ublks;
