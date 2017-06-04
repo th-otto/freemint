@@ -66,10 +66,10 @@ int nosuid = 0;
 #define NFS_MOUNT_VERS 1
 
 
-typedef struct xattr XATTR;
+typedef struct myxattr MYXATTR;
 
 /* structure for getxattr */
-struct xattr
+struct myxattr
 {
 	ushort	mode;
 	long	index;
@@ -93,7 +93,7 @@ typedef struct
 {
 	long	version;
 	fhandle	handle;		/* initial file handle from the server's mountd */
-	XATTR	mntattr;	/* not used yet */
+	MYXATTR	mntattr;	/* not used yet */
 	long	flags;
 	long	rsize;
 	long	wsize;
