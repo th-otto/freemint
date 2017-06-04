@@ -174,7 +174,7 @@ short GetScrapPath(char *scrap_path, short clear)
 			if((dirhandle >> 24) != 0xff)
 			{
 				char filename[DL_NAMEMAX], *ptr;
-				XATTR xattr;
+				MYXATTR xattr;
 				long xret;
 				ptr = &scrap_path[strlen(scrap_path)];
 				do

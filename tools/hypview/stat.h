@@ -27,7 +27,7 @@
 #define _stat_h
 
 /* old stat structure */
-struct xattr
+struct myxattr
 {
 	unsigned short	mode;
 	long	index;
@@ -46,6 +46,6 @@ struct xattr
 	short	reserved2;
 	long	reserved3[2];
 };
-typedef struct xattr XATTR;
+typedef struct myxattr MYXATTR;
 
 #endif

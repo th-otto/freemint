@@ -30,10 +30,10 @@
 # include <mintbind.h>
 # include <sys/stat.h>
 
-typedef struct xattr		XATTR;
+typedef struct myxattr		MYXATTR;
 
 /* structure for Fxattr */
-struct xattr
+struct myxattr
 {
 	ushort	mode;
 	long	index;
@@ -252,7 +252,7 @@ find_config_file (void)
 int
 load_config_file (void)
 {
-	XATTR xattr;
+	MYXATTR xattr;
 	char *file_data;
 	ulong filesize;
 	long l;

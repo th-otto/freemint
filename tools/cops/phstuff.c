@@ -166,7 +166,7 @@ void *
 load_cpx(CPX_DESC *cpx_desc, char *cpx_path, long *cmplt_size, short load_header)
 {
 	char name[256];
-	struct xattr xattr;
+	struct myxattr xattr;
 	void *addr = NULL;
 
 	strcpy(name, cpx_path);
