@@ -38,9 +38,9 @@
 /* XXX -> mintlib */
 typedef long long llong;
 
-#include "../../sys/mint/stat.h"
-#include "../../sys/mint/un.h"
+#include <sys/stat.h>
 #include <netinet/in.h>
+#include <sys/un.h>
 
 #include "print.h"
 
