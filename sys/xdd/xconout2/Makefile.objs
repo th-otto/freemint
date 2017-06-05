@@ -43,6 +43,7 @@ build: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBKERNTARGET)
 	$(CC) $(LDFLAGS) -o $@ $(CFLAGS) $(OBJS) $(LIBS)
+	$(STRIP) $@
 
 $(OBJS): ../XCONOUT2DEFS
 

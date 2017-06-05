@@ -27,7 +27,7 @@ GENFILES = mkbuild buildserial
 SGENFILES = build.h cdef.h
 
 mkbuild: mkbuild.o
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(CFLAGS) -o $@.$$$$ $(OBJS) $(LIBS) && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 # default dependencies
 # must be included last

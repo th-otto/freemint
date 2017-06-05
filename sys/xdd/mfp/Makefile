@@ -37,9 +37,11 @@ entry:
 
 mfp.xdd: mfp.o $(LIBKERNTARGET)
 	$(LD) $(CFLAGS) -o $@ $< $(LIBS)
+	$(STRIP) $@
 
 mfp_mil.xdd: mfp_mil.o $(LIBKERNTARGET)
 	$(LD) $(CFLAGS) -o $@ $< $(LIBS)
+	$(STRIP) $@
 
 mfp_mil.c:
 	ln -s mfp.c mfp_mil.c

@@ -50,6 +50,7 @@ build: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBKERNTARGET)
 	$(CC) -o $@ $(CFLAGS) $(OBJS) $(LIBS) $(LDEXTRA)
+	$(STRIP) $@
 	
 $(OBJS): ../STORAGEDEFS
 

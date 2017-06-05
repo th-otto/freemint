@@ -38,6 +38,7 @@ main.o:	../main.c
 # scsilink driver target
 $(TARGET): $(OBJS) $(LIBKERNSTMP)
 	$(LD) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(STRIP) $@
 	$(FLAGS) --mno-altram --mno-altalloc $@
 	
 include $(top_srcdir)/DEPENDENCIES

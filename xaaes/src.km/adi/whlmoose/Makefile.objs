@@ -46,9 +46,11 @@ build:
 	
 moose.adi: whlmoose.o $(OBJS) $(LIBKERNTARGET)
 	$(LDFLAGS) $(CFLAGS) -o $@ $< $(OBJS) $(LIBS)
+	$(STRIP) $@
 
 moose_w.adi: whlmoose_w.o $(OBJS) $(LIBKERNTARGET)
 	$(LDFLAGS) $(CFLAGS) -o $@ $< $(OBJS) $(LIBS)
+	$(STRIP) $@
 
 $(srcdir)/whlmoose_w.c: whlmoose.c
 	ln -s whlmoose.c $(srcdir)/whlmoose_w.c

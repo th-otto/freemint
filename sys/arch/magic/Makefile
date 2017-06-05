@@ -39,15 +39,17 @@ CPU = 000
 endif
 
 
+#
+# we may end up here by parallel makes from the top directory for different kernels
 $(TARGET): $(OBJS) $(LIBKERNSTMP)
-	$(LD) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(LD) $(CFLAGS) $(LDFLAGS) -o $@.$$$$ $(OBJS) $(LIBS) && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 
 ifeq ($(CROSS),yes)
 
 # for cross-compiling use this: (assumes you have perl and cnm)
 magic.i: $(TARGET)
-	perl genmagic.pl > $@
+	perl genmagic.pl > $@.$$$$ && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 else
 

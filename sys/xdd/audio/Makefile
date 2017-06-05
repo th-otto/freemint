@@ -32,6 +32,7 @@ OBJS = $(COBJS:.c=.o) $(SOBJS:.S=.o)
 
 $(TARGET): $(OBJS) $(LIBKERNTARGET)
 	$(LD) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(STRIP) $@
 
 actrl:
 	$(CC) $(MODEL) $(OPTS) $(WARN) actrl.c -o $@

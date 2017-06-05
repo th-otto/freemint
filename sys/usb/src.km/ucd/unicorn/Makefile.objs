@@ -50,6 +50,7 @@ build: $(TARGET)
 
 $(TARGET): $(OBJS) $(LIBKERNTARGET)
 	$(CC) $(LDEXTRA) -o $@ $(CFLAGS) $(OBJS) $(LIBS)
+	$(STRIP) $@
 	
 $(OBJS): ../UNICORNDEFS
 
