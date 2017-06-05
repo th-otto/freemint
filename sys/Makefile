@@ -1,14 +1,13 @@
 #
-# Makefile for kernel
+# Makefile for libkern.a
 #
 
 SHELL = /bin/sh
-SUBDIRS = arch buildinfo gen-syscall libkern sockets usb xdd xfs
-KERNELSUBDIRS = arch buildinfo
+SUBDIRS = asm
 
 srcdir = .
-top_srcdir = .
-subdir = 
+top_srcdir = ..
+subdir = libkern
 
 default: help
 
@@ -16,42 +15,67 @@ include $(top_srcdir)/CONFIGVARS
 include $(top_srcdir)/RULES
 include $(top_srcdir)/PHONY
 
-all-here: all-kernels
+all-here: all-libs
 
 # default overwrites
-KERNELSUBDIRS += $(MODULEDIRS)
 
 # default definitions
-GENFILES = $(compile_all_dirs) mint/*~ sys/*~
+GENFILES = .compile_* libkern*.a
 
 
 help:
 	@echo '#'
 	@echo '# targets:'
 	@echo '# --------'
-	@echo '# - all'
-	@echo '# - sockets / xdd / xfs / usb'
-	@echo '# - all-kernels'
-	@echo '# - $(kerneltargets)'
+	@echo '# - $(cputargets)'
 	@echo '#'
 	@echo '# - bakclean'
 	@echo '# - clean'
 	@echo '# - distclean'
 	@echo '# - help'
 	@echo '#'
-	@echo '# example for a Milan kernel: -> make mil'
+	@echo '# example for a 030 libkern: -> make 030'
 	@echo '#'
 
-all-kernels:
+all-libs:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
-	for i in $(kerneltargets); do \
+	for i in $(cputargets); do \
 		echo "Making $$i"; \
 		($(MAKE) $$i) \
 		|| case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
 	done && test -z "$$fail"
 
-$(kerneltargets):
-	$(MAKE) buildkernel kernel=$@
+$(cputargets):
+	$(MAKE) libkern$@.a CPU=$@
 
-sockets xdd xfs usb:
-	cd $@; $(MAKE) all
+libkern$(CPU).a: objs asm-files
+	$(shell \
+	  if [ ! -e $@ \
+	         -o .compile_$(CPU)/objs -nt $@ \
+	         -o asm/.compile_$(CPU)/asm-files -nt $@ ] ; \
+	  then \
+		objs=`cat .compile_$(CPU)/objs` ; \
+		objs=`for i in $$objs ; do echo .compile_$(CPU)/$$i ; done` ; \
+		\
+		asmobjs=`cat asm/.compile_$(CPU)/asm-files` ; \
+		asmobjs=`for i in $$asmobjs ;  do echo asm/.compile_$(CPU)/$$i ; done` ; \
+		\
+		echo "$(RM) $@; $(AR) rcs $@ $$objs $$asmobjs" ; \
+	  fi \
+	)
+
+objs: .compile_$(CPU)
+	cd .compile_$(CPU); $(MAKE)
+
+clean clean-recursive distclean distclean-recursive bakclean bakclean-recursive::
+	@list='$(cputargets)'; for dir in $$list; do \
+	  subdir=".compile_$${dir}"; \
+	  target=`echo $@ | sed s/-recursive//`; \
+	  test -d $$subdir && { echo "Making $$target in $$subdir"; \
+	  (cd $$subdir && $(MAKE) -r $$target); } || true; \
+	  target="libkern$${dir}.a"; \
+	done
+	$(RM) objs
+
+asm-files:
+	cd asm; $(MAKE) CPU="$(CPU)" asm-files

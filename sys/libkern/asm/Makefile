@@ -28,10 +28,6 @@ GENFILES = .compile_*
 asm-files: .compile_$(CPU)
 	cd .compile_$(CPU); $(MAKE)
 
-.compile_$(CPU): Makefile.objs
-	$(MKDIR) -p $@
-	$(CP) $< $@/Makefile
-
 clean clean-recursive distclean distclean-recursive bakclean bakclean-recursive::
 	@list='$(cputargets)'; for dir in $$list; do \
 	  subdir=".compile_$${dir}"; \
