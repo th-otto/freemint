@@ -96,6 +96,7 @@ int fstat(int __fd, struct stat *__buf) __THROW;
 int __fstat(int __fd, struct stat *__buf) __THROW;
 
 int stat(const char *filename, struct stat *st) __THROW;
+int __stat(const char *filename, struct stat *st) __THROW;
 
 
 struct device
@@ -523,6 +524,8 @@ out:
 }
 }
 
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
 int
 write(int fd, const void *_buf, size_t size)
 {
@@ -598,7 +601,7 @@ write(int fd, const void *_buf, size_t size)
 		ulong data = (todo / mydev->xhdi_blocksize) * mydev->xhdi_blocksize;
 		long ret;
 		
-		ret = rwabs_xhdi(mydev, 1, buf, data, recno);
+		ret = rwabs_xhdi(mydev, 1, (void *)buf, data, recno);
 		if (ret)
 		{
 			DEBUG(("write: full blocks: write failure (r = %li, errno = %i)\n", ret, errno));
