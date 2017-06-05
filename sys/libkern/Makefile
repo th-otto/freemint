@@ -71,5 +71,15 @@ objs: .compile_$(CPU)
 	$(MKDIR) -p $@
 	$(CP) $< $@/Makefile
 
+clean clean-recursive distclean distclean-recursive bakclean bakclean-recursive::
+	@list='$(cputargets)'; for dir in $$list; do \
+	  subdir=".compile_$${dir}"; \
+	  target=`echo $@ | sed s/-recursive//`; \
+	  test -d $$subdir && { echo "Making $$target in $$subdir"; \
+	  (cd $$subdir && $(MAKE) -r $$target); } || true; \
+	  target="libkern$${dir}.a"; \
+	done
+	$(RM) objs
+
 asm-files:
 	cd asm; $(MAKE) CPU="$(CPU)" asm-files
