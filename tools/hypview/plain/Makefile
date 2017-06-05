@@ -27,8 +27,7 @@ CFLAGS += -g
 OBJS = $(COBJS:.c=.o)
 
 $(TARGET): $(OBJS)
-	$(AR) cr $@ $(OBJS)
-	$(RANLIB) $@
+	$(AR) rcs $@.$$$$ $(OBJS) && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 include $(top_srcdir)/DEPENDENCIES
 	

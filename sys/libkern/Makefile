@@ -60,7 +60,7 @@ libkern$(CPU).a: objs asm-files
 		asmobjs=`cat asm/.compile_$(CPU)/asm-files` ; \
 		asmobjs=`for i in $$asmobjs ;  do echo asm/.compile_$(CPU)/$$i ; done` ; \
 		\
-		echo "$(RM) $@; $(AR) rc $@ $$objs $$asmobjs; $(RANLIB) $@;" ; \
+		echo "$(RM) $@; $(AR) rcs $@ $$objs $$asmobjs" ; \
 	  fi \
 	)
 

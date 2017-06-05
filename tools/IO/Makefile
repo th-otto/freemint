@@ -24,8 +24,7 @@ all-here: $(TARGET)
 OBJS = $(COBJS:.c=.o)
 
 $(TARGET): $(OBJS)
-	$(AR) r $@ $(OBJS)
-	$(RANLIB) $@
+	$(AR) rcs $@.$$$$ $(OBJS) && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 
 include $(top_srcdir)/DEPENDENCIES

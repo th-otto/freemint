@@ -28,8 +28,7 @@ OBJS = $(COBJS:.c=.o)
 GENFILES = $(TARGET) libdgdp.pdb libdgdp.lib
 
 $(TARGET): $(OBJS)
-	$(AR) cr $@ $(OBJS)
-	$(RANLIB) $@
+	$(AR) rcs $@.$$$$ $(OBJS) && mv $@.$$$$ $@ || { $(RM) $@.$$$$; false; }
 
 include $(top_srcdir)/DEPENDENCIES
 	
