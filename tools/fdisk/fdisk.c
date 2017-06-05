@@ -79,7 +79,9 @@ static int quiet = 0;		/* 1: suppress all warnings */
 static int dump = 0;		/* 1: list in a format suitable for later input */
 static int verify = 0;		/* 1: check that listed partition is reasonable */
 static int no_write = 0;	/* 1: do not actually write to disk */
+# if 0
 static int no_reread = 0;	/* 1: skip the BLKRRPART ioctl test at startup */
+#endif
 static int opt_list = 0;
 static char *save_sector_file = NULL;
 static char *restore_sector_file = NULL;
@@ -250,15 +252,13 @@ _my_open (const char *_dev, int iomode)
 static int
 _my_close (int fd)
 {
-	long ret;
-	
 	if (fd != xhdi_drv)
 	{
 		__set_errno (EBADF);
 		return -1;
 	}
 	
-	ret = Dlock (0, xhdi_drv);
+	(void) Dlock (0, xhdi_drv);
 	xhdi_drv = -1;
 	
 	return 0;
@@ -297,6 +297,8 @@ _my_ioctl (int fd, int cmd, void *arg)
 	return -1;
 }
 
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
 static ssize_t
 _my_write (int fd, const void *buf, size_t size)
 {
@@ -314,7 +316,7 @@ _my_write (int fd, const void *buf, size_t size)
 	
 	recno = xhdi_pos / xhdi_ssize;
 	
-	ret = rwabs_xhdi (1, buf, size, recno);
+	ret = rwabs_xhdi (1, (void *)buf, size, recno);
 	if (!ret)
 	{
 		xhdi_pos += size;
@@ -527,8 +529,9 @@ ulong_to_chars (ulong u, char *uu)
 }
 
 static ulong
-chars_to_ulong (uchar *uu)
+chars_to_ulong (const char *ss)
 {
+	const unsigned char *uu = (const unsigned char *)ss;
 	int i;
 	ulong u = 0;
 	
@@ -852,6 +855,7 @@ struct part_desc
 }
 zero_part_desc;
 
+# if 0
 static struct part_desc *
 outer_extended_partition (struct part_desc *p)
 {
@@ -874,6 +878,7 @@ is_parent (struct part_desc *pp, struct part_desc *p)
 	
 	return 0;
 }
+#endif
 
 struct disk_desc
 {
@@ -882,6 +887,7 @@ struct disk_desc
 }
 oldp, newp;
 
+#if 0
 /* determine where on the disk this information goes */
 static void
 add_sector_and_offset (struct disk_desc *z)
@@ -896,6 +902,7 @@ add_sector_and_offset (struct disk_desc *z)
 		p->sector = (p->ep ? p->ep->start : 0);
 	}
 }
+#endif
 
 /* tell the kernel to reread the partition tables */
 static int
@@ -983,7 +990,9 @@ static int default_format = F_MEGABYTE;
 static int specified_format = 0;
 static int show_extended = 0;
 static int one_only = 0;
+#if 0
 static int one_only_pno;
+#endif
 static int increment = 0;
 
 static void
@@ -1566,6 +1575,7 @@ write_partitions (char *dev, int fd, struct disk_desc *z)
  * Otherwise empty lines are ignored.
  */
 
+#if 0
 static int eof, eob;
 
 static struct dumpfld
@@ -1581,6 +1591,7 @@ dumpflds[] =
 	{ 2, "Id", 0 },
 	{ 3, "bootable", 1 }
 };
+#endif
 
 /*
  * Read a line, split it into fields
@@ -1591,6 +1602,7 @@ dumpflds[] =
 # define RD_EOF	(-1)
 # define RD_CMD	(-2)
 
+#if 0
 static int
 read_stdin (uchar **fields, uchar *line, int fieldssize, int linesize)
 {
@@ -1605,32 +1617,32 @@ read_stdin (uchar **fields, uchar *line, int fieldssize, int linesize)
 	fno = 0;
 	
 	/* read a line from stdin */
-	lp = fgets (line+2, linesize, stdin);
+	lp = (uchar *)fgets ((char *)line+2, linesize, stdin);
 	if (!lp)
 	{
 		eof = 1;
 		return RD_EOF;
 	}
 	
-	lp = index (lp, '\n');
+	lp = (uchar *)strchr ((char *)lp, '\n');
 	if (!lp)
 		fatal ("long or incomplete input line - quitting\n");
 	
 	*lp = 0;
 	
 	/* remove comments, if any */
-	lp = index (line+2, '#');
+	lp = (uchar *)strchr ((char *)line+2, '#');
 	if (lp) *lp = 0;
 	
 	/* recognize a few commands - to be expanded */
-	if (!strcmp (line+2, "unit: sectors"))
+	if (!strcmp ((const char *)line+2, "unit: sectors"))
 	{
 		specified_format = F_SECTOR;
 		return RD_CMD;
 	}
 	
 	/* dump style? - then bad input is fatal */
-	ip = index (line+2, ':');
+	ip = (uchar *)strchr ((char *)line+2, ':');
 	if (ip)
 	{
 		struct dumpfld *d;
@@ -1645,7 +1657,7 @@ nxtfld:
 		
 		for (d = dumpflds; d-dumpflds < SIZE (dumpflds); d++)
 		{
-			if (!strncmp (ip, d->fldname, strlen (d->fldname)))
+			if (!strncmp ((const char *)ip, d->fldname, strlen (d->fldname)))
 			{
 				ip += strlen (d->fldname);
 				
@@ -1732,6 +1744,7 @@ get_ul (char *u, ulong *up, ulong def, int base)
 	
 	return 0;
 }
+#endif
 
 # if 0
 
@@ -2184,10 +2197,10 @@ read_input (char *dev, int interactive, struct disk_desc *z)
 	z->partno = 0;
 	
 	if (interactive)
-		warn ("
-Input in the following format; absent fields get a default value.
-<start> <size> <type [E,S,L,X,hex]> <bootable [-,*]> <c,h,s> <c,h,s>
-Usually you only need to specify <start> and <size> (and perhaps <type>).
+		warn ("\
+Input in the following format; absent fields get a default value.\n\
+<start> <size> <type [E,S,L,X,hex]> <bootable [-,*]> <c,h,s> <c,h,s>\n\
+Usually you only need to specify <start> and <size> (and perhaps <type>).\n\
 ");
 	eof = 0;
 	
@@ -2221,32 +2234,32 @@ static void
 usage (void)
 {
 	version ();
-	printf ("Usage: \
-	" PROGNAME " [options] device ... \
-device: something like /dev/hda or /dev/sda \
-useful options: \
-    -s [or --show-size]: list size of a partition \
-    -c [or --id]:        print or change partition Id \
-    -l [or --list]:      list partitions of each device \
-    -d [or --dump]:      idem, but in a format suitable for later input \
-    -i [or --increment]: number sectors etc. from 1 instead of from 0 \
-    -uS, -uM:            accept/report in units of sectors/MB \
-    -T [or --list-types]:list the known partition types \
-    -R [or --re-read]:   make kernel reread partition table \
-    -N# :                change only the partition with number # \
-    -n :                 do not actually write to disk \
-    -O file :            save the sectors that will be overwritten to file \
-    -I file :            restore these sectors again \
-    -v [or --version]:   print version \
-    -? [or --help]:      print this message \
-dangerous options: \
-    -x [or --show-extended]: also list extended partitions on output \
-                           or expect descriptors for them on input \
-    -q  [or --quiet]:      suppress warning messages \
-    You can override the detected geometry using: \
-    -S# [or --sectors #]:  set the number of sectors to use \
-    You can disable all consistency checking with: \
-    -f  [or --force]:      do what I say, even if it is stupid \
+	printf ("Usage:\n\
+	" PROGNAME " [options] device ...\n\
+device: something like /dev/hda or /dev/sda\n\
+useful options:\n\
+    -s [or --show-size]: list size of a partition\n\
+    -c [or --id]:        print or change partition Id\n\
+    -l [or --list]:      list partitions of each device\n\
+    -d [or --dump]:      idem, but in a format suitable for later input\n\
+    -i [or --increment]: number sectors etc. from 1 instead of from 0\n\
+    -uS, -uM:            accept/report in units of sectors/MB\n\
+    -T [or --list-types]:list the known partition types\n\
+    -R [or --re-read]:   make kernel reread partition table\n\
+    -N# :                change only the partition with number #\n\
+    -n :                 do not actually write to disk\n\
+    -O file :            save the sectors that will be overwritten to file\n\
+    -I file :            restore these sectors again\n\
+    -v [or --version]:   print version\n\
+    -? [or --help]:      print this message\n\
+dangerous options:\n\
+    -x [or --show-extended]: also list extended partitions on output\n\
+                           or expect descriptors for them on input\n\
+    -q  [or --quiet]:      suppress warning messages\n\
+    You can override the detected geometry using:\n\
+    -S# [or --sectors #]:  set the number of sectors to use\n\
+    You can disable all consistency checking with:\n\
+    -f  [or --force]:      do what I say, even if it is stupid\n\
 ");
 	exit(1);
 }
@@ -2254,10 +2267,10 @@ dangerous options: \
 static void
 activate_usage (char *progn)
 {
-	printf ("Usage: \
-  %s device	 	list active partitions on device \
-  %s device n1 n2 ...	activate partitions n1 ..., inactivate the rest \
-  %s device		activate partition n, inactivate the other ones \
+	printf ("Usage:\n\
+  %s device	 	list active partitions on device\n\
+  %s device n1 n2 ...	activate partitions n1 ..., inactivate the rest\n\
+  %s device		activate partition n, inactivate the other ones\n\
 ", progn, progn, PROGNAME " -An");
 	exit (1);
 }
@@ -2318,7 +2331,7 @@ main (int argc, char **argv)
 	if (argc < 1)
 		fatal ("no command?\n");
 	
-	progn = rindex (argv[0], '/');
+	progn = strrchr (argv[0], '/');
 	if (!progn)
 		progn = argv[0];
 	else
@@ -2589,7 +2602,7 @@ do_activate (char **av, int ac, char *arg)
 {
 	char *dev = av[0];
 	int fd;
-	int rw, i, pno, lpno;
+	int rw, i, pno;
 	struct disk_desc *z;
 	
 	z = &oldp;
