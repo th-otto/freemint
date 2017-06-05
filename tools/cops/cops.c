@@ -2079,11 +2079,7 @@ about(void)
 static short
 handle_keyboard(short kstate, short key)
 {
-	short handle;
-
 	DEBUG(("handle_keyboard 0x%x 0x%x\n", kstate, key));
-
-	handle = top_whdl();
 
 	/* Scancode auswerten? */
 	if (kstate & KbSCAN)
@@ -3866,7 +3862,7 @@ main(int argc, char *argv[])
 		appl_exit();
 	}
 	else
-		Cconws(fstring_addr[NOAES_STR]);
+		(void) Cconws(fstring_addr[NOAES_STR]);
 
 	return 0;
 }

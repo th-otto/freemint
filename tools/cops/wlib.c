@@ -582,9 +582,10 @@ scroll_horizontal(WINDOW *window, short dx)
 					{
 						screen.fd_addr = 0L; /* Bildschirm */
 					
-						*(GRECT *)rect = box;
-						rect[0].x2 += box.g_x - 1;
-						rect[0].y2 += box.g_y - 1;
+						rect[0].x1 = box.g_x;
+						rect[0].y1 = box.g_y;
+						rect[0].x2 = box.g_x + box.g_w - 1;
+						rect[0].y2 = box.g_y + box.g_h - 1;
 		
 						vs_clip(vdi_handle, 1, (short *) rect);	/* Clipping-Rechteck setzen */
 					
@@ -649,9 +650,10 @@ scroll_vertical(WINDOW *window, short dy)
 					{
 						screen.fd_addr = 0L; /* Bildschirm */
 
-						*(GRECT *)rect = box;
-						rect[0].x2 += box.g_x - 1;
-						rect[0].y2 += box.g_y - 1;
+						rect[0].x1 = box.g_x;
+						rect[0].y1 = box.g_y;
+						rect[0].x2 = box.g_x + box.g_w - 1;
+						rect[0].y2 = box.g_y + box.g_h - 1;
 
 						vs_clip(vdi_handle, 1, (short *) rect);	/* Clipping-Rechteck setzen */
 
