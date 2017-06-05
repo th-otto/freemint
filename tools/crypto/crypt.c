@@ -191,10 +191,10 @@ static void
 blow_keyinit (BF_KEY *key, char *passphrase)
 {
 	struct MD5Context md5sum;
-	char hash [16];
+	unsigned char hash [16];
 	
 	MD5Init (&md5sum);
-	MD5Update (&md5sum, passphrase, strlen (passphrase));
+	MD5Update (&md5sum, (const unsigned char *)passphrase, strlen (passphrase));
 	MD5Final (hash, &md5sum);
 	
 	InitializeBlowfish (key, hash, 16);
