@@ -92,13 +92,13 @@ install_cookie (void)
 	
 	if (Ssystem (-1, 0, 0) == -32)
 	{
-		Cconws (MSG_MINT);
+		(void) Cconws (MSG_MINT);
 		return 1;
 	}
 	
 	if (Ssystem (S_GETCOOKIE, TCPCOOKIE, &dummy) == 0)
 	{
-		Cconws (MSG_ALREADY);
+		(void) Cconws (MSG_ALREADY);
 		return 1;
 	}
 	
@@ -278,12 +278,12 @@ main (int argc, char *argv[])
 		/* Try installation */
 	if (fork () == 0)
 	{
-		Cconws (MSG_BOOT);
-		Cconws (MSG_GREET);
+		(void) Cconws (MSG_BOOT);
+		(void) Cconws (MSG_GREET);
 		
 		if (install_cookie ())
 		{
-			Cconws (MSG_FAILURE);
+			(void) Cconws (MSG_FAILURE);
 			exit (1);
 		}
 		
