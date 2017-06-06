@@ -149,6 +149,8 @@ make_socket (long maxmsgsize)
 	return fd;
 }
 
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
 long
 do_nfs_mount (const char *remote, const char *localdir)
 {
@@ -241,8 +243,8 @@ do_nfs_mount (const char *remote, const char *localdir)
 	}
 	
 	res = clnt_call (cl, MOUNTPROC_MNT,
-	                (xdrproc_t) xdr_dirpath, (caddr_t) remote,
-	                (xdrproc_t) xdr_fhstatus, (caddr_t) &fh, total_time);
+	                (xdrproc_t) xdr_dirpath, (void *)remote,
+	                (xdrproc_t) xdr_fhstatus, (void *)&fh, total_time);
 	
 	if (res != RPC_SUCCESS)
 	{
@@ -353,5 +355,6 @@ do_nfs_unmount (const char *remote, const char *local)
 	                  (xdrproc_t)xdr_dirpath, (caddr_t)remote,
 	                  (xdrproc_t)xdr_void, (caddr_t)NULL, total_time);
 	clnt_destroy (cl);
+	(void) res;
 	return 0;
 }
