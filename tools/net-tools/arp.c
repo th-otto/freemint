@@ -92,8 +92,7 @@ decode_hw (struct sockaddr_hw *shw)
 }
 
 static char *
-decode_pr (shw)
-	struct sockaddr_hw *shw;
+decode_pr (struct sockaddr_hw *shw)
 {
 	static char strbuf[20];
 	struct in_addr ina;
@@ -103,7 +102,7 @@ decode_pr (shw)
 	case ETHERTYPE_IP:
 		if (shw->shw_len != 4)
 			break;
-		ina.s_addr = *(long *)shw->shw_addr;
+		memcpy(&ina.s_addr, shw->shw_addr, 4);
 		strcpy (strbuf, inet_ntoa (ina));
 		break;
 	}

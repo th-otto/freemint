@@ -64,6 +64,8 @@
 
 #include "scsilink.h"
 
+#undef min
+#define min(a, b)       ((a) < (b) ? (a) : (b))
 
 #define PROGRAM		"slinkctl"
 #define VERSION		"v0.50"

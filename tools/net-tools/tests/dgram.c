@@ -5,10 +5,11 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <stddef.h>
 
 #define SERVER	"/tmp/dgramd"
 #define CLIENT	"/tmp/dgram"
-#define OFFSET	((short)((struct sockaddr_un *)0)->sun_path)
+#define OFFSET	offsetof(struct sockaddr_un, sun_path)
 
 int
 main (void)

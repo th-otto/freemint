@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stddef.h>
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -13,7 +14,7 @@ typedef size_t socklen_t;
 # endif
 
 #define SERVER	"/tmp/fort"
-#define OFFSET	((short)((struct sockaddr_un *) 0)->sun_path)
+#define OFFSET	offsetof(struct sockaddr_un, sun_path)
 
 int
 main (int argc, char *argv[])

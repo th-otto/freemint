@@ -2,18 +2,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <stddef.h>
 
 
 #define NONBLOCK
 
 #define SERVER	"/tmp/fort"
-#define OFFSET ((short)((struct sockaddr_un *)0)->sun_path)
+#define OFFSET	offsetof(struct sockaddr_un, sun_path)
 
 static int run = 1;
 static int fd = 0;

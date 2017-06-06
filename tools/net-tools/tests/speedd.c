@@ -8,12 +8,13 @@
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <stddef.h>
 
 
 #define SENDING	10000000
 
 #define SERVER	"/tmp/fort"
-#define OFFSET	((short)((struct sockaddr_un *) 0)->sun_path)
+#define OFFSET	offsetof(struct sockaddr_un, sun_path)
 
 static int run = 1;
 static int fd = 0;

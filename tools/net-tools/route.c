@@ -23,6 +23,7 @@
 
 #define _PATH_DEV_ROUTE		"/dev/route"
 
+#pragma GCC diagnostic ignored "-Waggregate-return"
 
 /* structure obtained from /dev/route */
 struct route_info
