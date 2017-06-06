@@ -26,6 +26,8 @@
 #ifndef _diallib_h
 #define _diallib_h
 
+#include <gem.h>
+
 #define	ON                      1
 #define	OFF                     0
 #define	YES                     ON
@@ -348,7 +350,7 @@ void DoVA_START(short msg[8]);			/*	minimales AV-Protokoll	*/
 #if USE_AV_PROTOCOL >= 2				/*	normales/maximales AV-Protokoll	*/
 
 extern short server_id;					/*	Programm ID des Servers	*/
-extern long server_cfg;
+extern long av_server_cfg;
 
 void DoVA_PROTOSTATUS(short msg[8]);
 void DoAV_PROTOKOLL(short flags);

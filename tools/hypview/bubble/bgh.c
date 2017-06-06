@@ -6,7 +6,9 @@
 	#include <fcntl.h>
 
 	/* Mxalloc mode: global memory */
+#ifndef MX_GLOBAL
 	#define MX_GLOBAL	(2<<4)
+#endif
 #else
 	#include <tos.h>
 #endif

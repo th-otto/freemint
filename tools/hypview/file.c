@@ -220,17 +220,15 @@ open_file(char *path)
 	}
 	else
 	{
-		MYXATTR attr;
+		XATTR attr;
 		/*	Aenderungsdatum und -zeit sichern	*/
 		if (Fxattr(0/*FXATTR_RESOLVE*/, doc->path, &attr) < 0L)
 		{
 			doc->mtime = 0;
-			doc->mdate = 0;
 		}
 		else
 		{
-			doc->mtime = attr.mtime;
-			doc->mdate = attr.mdate;
+			doc->mtime = attr.st_mtime;
 		}
 	}
 
@@ -433,14 +431,14 @@ short OpenFileSW(char *path, char *chapter, short new_win)
  * document if necessary. This behaviour is enabled by the CHECK_TIME option. */
 void CheckFiledate(DOCUMENT *doc)
 {
-	MYXATTR attr;
+	XATTR attr;
 	long ret;
 	
 	ret = Fxattr(0/*FXATTR_RESOLVE*/, doc->path, &attr);
 	if (ret == 0)
 	{
 		/* Modification time or date has changed ?*/
-		if (attr.mtime != doc->mtime || attr.mdate != doc->mdate)
+		if (attr.st_mtime != doc->mtime)
 		{
 			long node = 0;
 

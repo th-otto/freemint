@@ -79,7 +79,7 @@ struct _document_
 	long columns;               /* Number of window columns */
 	short buttons;              /* Toolbar button configuration (bit vector)*/
 	void *data;                 /* File format specific data */
-	short mtime,mdate;          /* File modification time and date */
+	long mtime;                 /* File modification time and date */
 	WINDOW_DATA *window;        /* Window associated with this file */
 	WINDOW_DATA *popup;			/* Currently activ popup window */
 	DOC_PROC1 displayProc;      /* Document display function */

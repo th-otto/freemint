@@ -34,12 +34,6 @@
 	#define KEYTAB _KEYTAB
 #endif
 
-#ifndef __GEMLIB_DEFS
-	typedef short GRECT[4];
-	typedef char *OBSPEC;
-	typedef void *OBJECT;
-	typedef void *RSHDR;
-#endif
 #ifndef _MT_GEMLIB_X_H_
 	typedef void *EVNT;
 	typedef void *DIALOG;

@@ -159,12 +159,11 @@ void DoUserEvents(EVNT *event)
 	}
 	else if(event->mwhich & MU_KEYBD)
 	{
-	short ascii=event->key,scan;
+	short ascii=event->key;
 	short kstate=event->kstate;
 
 		ConvertKeypress(&ascii,&kstate);
 
-		scan=(ascii>>8) & 0xff;
 		ascii=ascii & 0xff;
 
 		if(kstate & KbCTRL)
@@ -173,7 +172,7 @@ void DoUserEvents(EVNT *event)
 			{
 				short global_cycle = (kstate & KbSHIFT ? !av_window_cycle : av_window_cycle);
 				
-				if(server_cfg && global_cycle)	/*	AV initialisiert?	*/
+				if(av_server_cfg && global_cycle)	/*	AV initialisiert?	*/
 				{
 					DoAV_SENDKEY(event->kstate, event->key);
 					event->mwhich&=~MU_KEYBD;

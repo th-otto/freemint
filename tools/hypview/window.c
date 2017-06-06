@@ -172,7 +172,7 @@ HelpWindow(WINDOW_DATA *p, short obj, void *data)
 	{
 		graf_mouse(ARROW,NULL);
 
-		if(!server_cfg)					/*	AV noch nicht initialisiert?	*/
+		if(!av_server_cfg)					/*	AV noch nicht initialisiert?	*/
 			DoAV_PROTOKOLL(AV_P_QUOTING|AV_P_VA_START|AV_P_AV_STARTED);
 
 		DoAV_ACCWINDOPEN(win->whandle);

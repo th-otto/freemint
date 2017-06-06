@@ -174,14 +174,14 @@ short GetScrapPath(char *scrap_path, short clear)
 			if((dirhandle >> 24) != 0xff)
 			{
 				char filename[DL_NAMEMAX], *ptr;
-				MYXATTR xattr;
+				XATTR xattr;
 				long xret;
 				ptr = &scrap_path[strlen(scrap_path)];
 				do
 				{
 					ret = Dxreaddir(DL_NAMEMAX, dirhandle, filename, &xattr, &xret);
 					if((ret >= 0) && (xret >= 0) && 
-						((xattr.mode&S_IFMT) == S_IFREG) && 
+						((xattr.st_mode&S_IFMT) == S_IFREG) && 
 						!strnicmp(filename+4,"SCRAP.",6))
 					{
 						strcpy(ptr, filename + 4);

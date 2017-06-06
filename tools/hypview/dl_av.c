@@ -50,7 +50,7 @@ void DoAV_EXIT(void);
  */
 
 short server_id = 0;								/*	Programm ID des Servers	*/
-long server_cfg = 0;
+long av_server_cfg = 0;
 char *av_name=NULL;							/*	Eigener Programmname	*/
 
 
@@ -61,9 +61,10 @@ char *av_name=NULL;							/*	Eigener Programmname	*/
 /*	Antwort des Servers auf AV_PROTOKOLL	*/
 void DoVA_PROTOSTATUS(short msg[8])
 {
-#if DEBUG == ON
-	char *server_name = *(char **)&msg[6];
-#endif
+	union {
+		short msg[2];
+		long l;
+	} cfg;
 
 	if(av_name)				/*	Applikationsname aus AV_PROTOKOLL noch da?	*/
 	{
@@ -71,10 +72,11 @@ void DoVA_PROTOSTATUS(short msg[8])
 		av_name = NULL;
 	}
 	
-	*(short *)&server_cfg = msg[4];
-	*((short *)&server_cfg+1) = msg[3];
+	cfg.msg[0] = msg[3];
+	cfg.msg[1] = msg[4];
+	av_server_cfg = cfg.l;
 #if DEBUG == ON
-	Debug("Server name: %s  protocol: %lx",server_name,server_cfg);
+	Debug("Server name: %s  protocol: %lx",*(char **)&msg[6],av_server_cfg);
 #endif
 }
 
@@ -107,7 +109,9 @@ void DoAV_PROTOKOLL(short flags)
 		{
 			if(!av_name)
 			{
-				av_name = (char *)Mxalloc(16, MX_PREFTT|MX_MPROT|MX_READABLE);
+				av_name = (char *)Mxalloc(16, MX_PREFTTRAM|MX_GLOBAL);
+				if ((long)av_name == -32l)
+					av_name = (char *)Malloc(16);
 				if(!av_name)
 					return;
 				

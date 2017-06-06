@@ -305,12 +305,12 @@ short CfgSaveMemory(long len)
 	{
 		if(cfg_save_pos+len>=cfg_save_size)
 		{
-		long ret;
+		void *ret;
 			cfg_save_size+=4096;
 			ret=Mxalloc(cfg_save_size,3);
-			if(ret<0)
-				ret=(long)Malloc(cfg_save_size);
-			if(ret>0)
+			if((long)ret == (long)-32)
+				ret=Malloc(cfg_save_size);
+			if(ret != NULL)
 			{
 			char *temp=cfg_savemem;
 				cfg_savemem=(char *)ret;
@@ -323,12 +323,12 @@ short CfgSaveMemory(long len)
 	}
 	else
 	{
-	long ret;
+	void *ret;
 		cfg_save_size=max(4096,len+1);
 		ret=Mxalloc(cfg_save_size,3);
-		if(ret<0)
-			ret=(long)Malloc(cfg_save_size);
-		if(ret>0)
+		if((long)ret == (long)-32)
+			ret=Malloc(cfg_save_size);
+		if(ret != NULL)
 		{
 			cfg_savemem=(char *)ret;
 			*cfg_savemem=0;

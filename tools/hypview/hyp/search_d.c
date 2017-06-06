@@ -30,7 +30,7 @@
 #include "defs.h"
 #include "hyp.h"
 
-static DIALOG *Hypfind_Dialog;
+/* static DIALOG *Hypfind_Dialog; */
 static short HypfindID;
 static char filename[DL_PATHMAX];
 
@@ -104,6 +104,7 @@ void Hypfind( DOCUMENT *doc )
 		short obj;
 		GRECT big, little;
 
+		(void)HypfindHandle;
 		little.g_x = little.g_y = little.g_w = little.g_h = 0;
 		form_center_grect ( tree, &big );
 		form_dial ( FMD_START, little.g_x, little.g_y, little.g_w, little.g_h, big.g_x, big.g_y, big.g_w, big.g_h );

@@ -145,6 +145,7 @@ short kstate=event->kstate;
 		((kstate & K_RSHIFT) ? ("+RSHIFT"):("")),
 		((kstate & 0x10/*KbNUM*/) ? ("+NUM"):("")));
 #endif
+	(void)scan;
 }
 
 void DoMessage(EVNT *event)

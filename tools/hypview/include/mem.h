@@ -27,10 +27,11 @@
 #define _mem_h
 
 /*	Mxalloc()-Modus	*/
+#ifndef MX_STRAM
 #define MX_STRAM	0
 #define MX_TTRAM	1
-#define	MX_PREFST	2
-#define MX_PREFTT	3
+#define	MX_PREFSTRAM	2
+#define MX_PREFTTRAM	3
 
 /* Protection bits.  */
 #define MX_MPROT	(1<<3)
@@ -39,5 +40,7 @@
 #define MX_GLOBAL	(2<<4) 			/*	globaler Speicher anfordern	*/
 #define MX_SUPER	(3<<4)
 #define MX_READABLE	(4<<4)
+
+#endif
 
 #endif
