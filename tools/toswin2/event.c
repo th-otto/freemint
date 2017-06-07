@@ -48,6 +48,8 @@ static void about_open(WDIALOG *dial)
 	set_string (dial->tree, ADATUM, __DATE__);
 #if defined(__GNUC__)
 	set_string (dial->tree, ACOMP, "GNU C");
+#elif defined(__AHCC__)
+	set_string (dial->tree, ACOMP, "AHCC");
 #elif defined(__PUREC__)
 	set_string (dial->tree, ACOMP, "PureC");
 #endif
@@ -67,6 +69,7 @@ static void about_open(WDIALOG *dial)
 static int about_close(WDIALOG *dial, short obj)
 {
 	wdial_close(dial);
+	(void) obj;
 
 	return TRUE;
 }
@@ -92,6 +95,7 @@ void menu_help(int title, int item)
 {
 	char *p, str[50], s[50];
 	
+	(void) title;
 	get_string(menu, item, s);
 	/* die fhrenden '  ' berspringen und das letzte auch nicht */
 	strncpy(str, s + 2, strlen(s) - 3);

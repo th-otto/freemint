@@ -128,22 +128,17 @@ init_ansi_colors (const short* work_out)
 
 	for (i = 0; i < 8; ++i) {
 		struct rgb rgb;
-		int normal, bright, hbright;
 
-		normal = renderer[i].normal;
-		bright = renderer[i].bright;
-		hbright = renderer[i].hbright;
-
-//		debug ("ANSI color #%d:\n", i);
+/*		debug ("ANSI color #%d:\n", i); */
 		vq_color (vdi_handle, renderer[i].bright, 1, (short*) &rgb);
-//		debug ("  Bright:      (%04d|%04d|%04d), effects: 0x%08x\n",
-//		       rgb.red, rgb.green, rgb.blue, renderer[i].bright_effects);
+/*		debug ("  Bright:      (%04d|%04d|%04d), effects: 0x%08x\n",
+		       rgb.red, rgb.green, rgb.blue, renderer[i].bright_effects); */
 		vq_color (vdi_handle, renderer[i].normal, 1, (short*) &rgb);
-//		debug ("  Normal:      (%04d|%04d|%04d), effects: 0x%08x\n",
-//		       rgb.red, rgb.green, rgb.blue, 0);
+/*		debug ("  Normal:      (%04d|%04d|%04d), effects: 0x%08x\n",
+		       rgb.red, rgb.green, rgb.blue, 0); */
 		vq_color (vdi_handle, renderer[i].hbright, 1, (short*) &rgb);
-//		debug ("  Half-bright: (%04d|%04d|%04d), effects: 0x%08x\n",
-//		       rgb.red, rgb.green, rgb.blue, renderer[i].hbright_effects);
+/*		debug ("  Half-bright: (%04d|%04d|%04d), effects: 0x%08x\n",
+		       rgb.red, rgb.green, rgb.blue, renderer[i].hbright_effects); */
 	}
 }
 
@@ -178,9 +173,7 @@ set_ansi_bg_color (TEXTWIN* tw, int color)
 
 /* Calculate the difference between two colors.  */
 static unsigned long int
-color_diff (color1, color2)
-	const short int color1[3];
-	const short int color2[3];
+color_diff (const short int color1[3], const short int color2[3])
 {
 	unsigned long int diff = 0;
 	unsigned long int r1 = color1[0];
@@ -189,10 +182,10 @@ color_diff (color1, color2)
 	unsigned long int g2 = color2[1];
 	unsigned long int b1 = color1[2];
 	unsigned long int b2 = color2[2];
-	unsigned long int max1 = 0;
-	unsigned long int max2 = 0;
-	unsigned long int min1 = 1000;
-	unsigned long int min2 = 1000;
+	short max1 = 0;
+	short max2 = 0;
+	short min1 = 1000;
+	short min2 = 1000;
 	unsigned long int s1, s2;
 	int i;
 
